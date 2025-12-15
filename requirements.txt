@@ -1,0 +1,5 @@
+Flask>=2.2
+flask-cors>=4.0
+requests>=2.31
+pyaudio>=0.2.13
+pytz>=2023.3

@@ -1,0 +1,19 @@
+{
+  "health_rings": {
+    "sleep": {
+      "hours": 5,
+      "minutes": 50
+    },
+    "steps": 1208,
+    "mood": {
+      "stress_level": 30,
+      "status": "正常"
+    }
+  },
+  "menstrual_cycle": {
+    "predicted_period_in_days": 8
+  },
+  "skin_status": {
+    "score": 86
+  }
+}

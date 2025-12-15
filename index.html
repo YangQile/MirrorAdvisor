@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肌刻 - 护肤品智能管理</title>
+
+    <!-- 在 <head> 里添加 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- 主应用容器 -->
+    <div id="app-container">
+
+        <!-- ===== 主屏幕 / 仪表盘 (默认显示) ===== -->
+        <div id="dashboard-view" class="view active-view">
+            <header class="dashboard-header">
+                <div class="logo">
+                    <!-- 建议创建一个 logo.png 放在 Images 文件夹 -->
+                    <img src="Images/logo.png" alt="肌刻 Logo" style="filter: brightness(0) invert(1);"> 
+                    <span>肌刻</span>
+                </div>
+            </header>
+
+            <main class="dashboard-main">
+                <div class="weather-display">
+                    <div class="weather-item">
+                        <img id="weather-icon" src="Images/weather/默认.svg" alt="天气图标">
+                        <span id="temp-value">--°</span>
+                        <span id="weather-desc" class="secondary-text">加载中</span>
+                    </div>
+                    <div class="weather-item">
+                        <img src="Images/weather/湿度.svg" alt="湿度图标">
+                        <span id="humidity-value">--%</span>
+                        <span id="humidity-text" class="secondary-text">--</span>
+                    </div>
+                    <div class="weather-item">
+                        <div id="uv-gauge" class="uv-gauge-container">
+                            <div class="uv-gauge-bg"></div>
+                            <div class="uv-gauge-arc"></div>
+                            <div class="uv-text-content">
+                                <div>UV</div>
+                            </div>
+                        </div>
+                        <div id="uv-level" class="uv-value" style="margin-top: 10px;">--</div>
+                        <span id="uv-protection-level" class="secondary-text">--</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btn-product-library" class="action-btn product">
+                        <div class="btn-icon">📄</div>
+                        <span>产品库</span>
+                    </button>
+                    <button id="btn-health-data" class="action-btn health">
+                        <div class="btn-icon">❤️</div>
+                        <span>健康数据</span>
+                    </button>
+                    <button id="btn-skin-analysis" class="action-btn analysis">
+                        <div class="btn-icon">🔍</div>
+                        <span>分析建议</span>
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- ===== 产品库页面 (默认隐藏) ===== -->
+        <div id="product-view" class="view">
+            <header class="view-header">
+                <button class="back-btn" data-target="dashboard-view">←</button>
+                <h1>产品库</h1>
+            </header>
+            <!-- 旧的 .container 结构放在这里 -->
+            <div class="container">
+                <aside class="sidebar">
+                    <h2>产品分类</h2>
+                    <ul class="category-list">
+                        <li class="category-item active" data-category="all">所有产品</li>
+                        <li class="category-item" data-category="cleanser">洁面产品</li>
+                        <li class="category-item" data-category="makeup_remover">卸妆产品</li>
+                        <li class="category-item" data-category="toner">爽肤水</li>
+                        <li class="category-item" data-category="essence">精华液</li>
+                        <li class="category-item" data-category="lotion_cream">面霜</li>
+                        <li class="category-item" data-category="eye_care">眼部护理</li>
+                        <li class="category-item" data-category="mask">面膜</li>
+                        <li class="category-item" data-category="sunscreen">防晒产品</li>
+                        <li class="category-item" data-category="lip_care">唇部护理</li>
+                        <li class="category-item" data-category="My_Product">我的产品</li>
+                        <li class="category-item" data-category="scan_product">扫描产品</li>
+                    </ul>
+                </aside>
+                <main class="content-area">
+                    <div class="product-grid" id="product-list"></div>
+                    <div id="camera-area" class="camera-area" style="display:none;">
+                        <p class="camera-placeholder">📸</p>
+                        <button id="start-scan-btn">启动摄像头扫描条码</button>
+                        <button id="stop-scan-btn" style="display:none;">关闭摄像头</button>
+                        <div id="scan-result" style="margin-top: 10px;"></div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+
+        <div id="health-view" class="view">
+            <!-- 仅保留返回按钮，去掉 <h1> -->
+            <button class="back-btn" data-target="dashboard-view"
+                    style="position:absolute;top:20px;left:20px;z-index:10;">←</button>
+
+            <div class="health-flex">
+                <img src="Images/健康.jpg" alt="健康数据" class="health-image">
+            </div>
+        </div>
+        <!-- ===== 肌肤检测页面 (默认隐藏) ===== -->
+        <div id="skin-analysis-area" class="skin-analysis-area view">
+        <!-- 分析建议模块放前面，成为主体 -->
+        <div id="advice-module" class="advice-module">
+            <h2>分析建议</h2>
+            <div id="advice-content" class="advice-content">
+                <button id="advice-back-btn" class="back-btn" data-target="dashboard-view" aria-label="返回主界面" style="position: absolute; left: 24px; top: 24px;">
+                    ←
+                </button>
+                <button id="fetch-advice-btn">获取护肤建议</button>
+                <!-- 新增: 加载动画容器 -->
+                <div id="loading-animation" class="loading-animation hidden">
+                    <div class="data-stream weather-data">
+                        <div class="icon">🌤</div>
+                        <div class="data-display"></div>
+                    </div>
+                    <div class="data-stream health-data">
+                        <div class="icon">❤</div>
+                        <div class="data-display"></div>
+                    </div>
+                    <div class="data-stream skin-data">
+                        <div class="icon">🔍</div>
+                        <div class="data-display"></div>
+                    </div>
+                    <div class="fusion-circle"></div>
+                </div>
+                <div id="advice-result" class="advice-result"></div>
+            </div>
+        </div>
+        <!-- 智能肌肤检测模块缩小显示 -->
+        <div id="detection-module" class="detection-module">
+            <div id="welcome-container" class="welcome-container">
+                <div class="welcome-icon">📸</div>
+                <h2>智能肌肤检测</h2>
+                <p>请将面部置于光线均匀的环境下，点击下方按钮开启摄像头进行分析。</p>
+            </div>
+            <div id="camera-container" class="camera-container">
+                <video id="live-video" autoplay playsinline></video>
+                <canvas id="capture-canvas" style="display: none;"></canvas>
+            </div>
+            <div id="preview-container" class="preview-container">
+                <img id="image-preview" src="" alt="照片预览">
+                <div id="magnifier-anim" class="magnifier-anim"></div>
+            </div>
+            <div id="analysis-result-container">
+                <div class="loader" id="loader" style="display: none;"></div>
+                <pre id="analysis-result-display"></pre>
+            </div>
+            <div id="controls-container" class="controls-container">
+                <button id="start-camera-btn">启动摄像头</button>
+                <button id="history-btn">历史数据</button> 
+                <button id="capture-btn" style="display: none;">拍照</button>
+                <div id="retake-analyze-group" style="display: none;">
+                    <button id="retake-btn">重新拍摄</button>
+                    <button id="analyze-btn">开始分析</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右键菜单 (保持不变) -->
+    <div id="custom-context-menu" class="custom-context-menu">
+        <ul>
+            <li id="add-to-my-products">放入我的产品</li>
+        </ul>
+    </div>
+
+    <div id="history-modal" class="history-modal hidden">
+        <div class="history-modal-content">
+            <span class="history-modal-close">×</span>
+            <h2>历史分析记录</h2>
+            <div class="chart-container">
+                <canvas id="history-chart"></canvas>
+            </div>
+            <div id="history-list">
+                <!-- 历史数据将通过JS动态插入到这里 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
