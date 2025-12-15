@@ -4,7 +4,7 @@ import os
 
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_API_KEY = os.environ.get(
-    "DEEPSEEK_API_KEY", "sk-e7a3d81e7e5e4b60a8e089967c539a2c"
+    "DEEPSEEK_API_KEY", "YOUR_DEEPSEEK_API_KEY"
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -189,3 +189,4 @@ if __name__ == "__main__":
         print(advice)
     except Exception as e:
         print(f"\n获取护肤建议失败：{e}")
+
