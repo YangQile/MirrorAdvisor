@@ -163,6 +163,4 @@ python app.py
 ---
 
 ## 许可协议
-- 默认使用 MIT（可按团队需要替换）。
-
-如需我帮你补充英文版 README、Dockerfile 或演示 Gif/截图，也可以继续告诉我。
+- MIT Liscense
